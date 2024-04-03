@@ -86,4 +86,13 @@ class User
     $stmt->execute();
     return $stmt->rowCount() > 0;
   }
+
+  public function deleteUser(string $id)
+  {
+    $query = 'DELETE FROM ' . $this->table . ' WHERE id = :id';
+    $stmt = $this->conn->prepare($query);
+    $stmt->bindParam(':id', $id);
+    $stmt->execute();
+    return $stmt->rowCount() > 0;
+  }
 }

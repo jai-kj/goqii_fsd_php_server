@@ -8,6 +8,7 @@ class Messages
     const USER_FETCH_SUCCESS = "User details fetched successfully";
     const USER_INSERT_SUCCESS = "User added successfully";
     const USER_UPDATE_SUCCESS = "User updated successfully";
+    const USER_DELETE_SUCCESS = "User deleted successfully";
     
     // Failure messages
     const DB_CONNECTION_FAILED = "Database connection failed";
@@ -23,4 +24,5 @@ class Messages
     const USER_INSERT_FAILURE = "Failed to add new user";
     const INCOMPLETE_USER_UPDATE_BODY = "Please provide name, email or date of birth of the user to update";
     const USER_UPDATE_FAILURE = "Failed to update user details";
+    const USER_DELETE_FAILURE = "Failed to remove user and their details";
 }

@@ -24,6 +24,7 @@ switch ($_SERVER['REQUEST_METHOD']) {
         break;
 
     case Constants::API_METHODS['DELETE']:
+        $userController->deleteUser($_GET['id']);
         break;
 
     default:

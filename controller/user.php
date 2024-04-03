@@ -129,4 +129,23 @@ class UserController
             interceptEcho(Messages::USER_UPDATE_FAILURE, 500, null, $e->getMessage());
         }
     }
+
+    public function deleteUser(string $id)
+    {
+        if (empty($id) || !is_string($id)) {
+            interceptEcho(Messages::INVALID_USER_ID, 400, null, Messages::INVALID_USER_ID);
+            return;
+        }
+
+        try {
+            $success = $this->userModel->deleteUser($id);
+            if ($success) {
+                interceptEcho(Messages::USER_DELETE_SUCCESS, 200);
+            } else {
+                interceptEcho(Messages::USER_NOT_FOUND, 404, null, Messages::USER_NOT_FOUND);
+            }
+        } catch (Exception $e) {
+            interceptEcho(Messages::USER_DELETE_FAILURE, 500, null, $e->getMessage());
+        }
+    }
 }
