@@ -31,6 +31,8 @@ function createUserTable($pdo)
             email VARCHAR(255) NOT NULL UNIQUE,
             password VARCHAR(255) NOT NULL,
             dob DATE NOT NULL,
+            reset_password_token VARCHAR(255),
+            reset_password_expire DATE,
             created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
             updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
         )");

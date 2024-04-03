@@ -64,6 +64,7 @@ class UserController
             $success = $this->userModel->insertUser($name, $email, $dob);
             if ($success) {
                 interceptEcho(Messages::USER_INSERT_SUCCESS, 200);
+                // TODO: Send set password email to newly added user
             } else {
                 interceptEcho(Messages::USER_INSERT_FAILURE, 500, null, Messages::USER_INSERT_FAILURE);
             }
