@@ -1,8 +1,13 @@
 <?php
 
+// Headers
+header('Access-Control-Allow-Origin: *');
+header('Content-Type: application/json');
+
 require_once __DIR__ . '/../vendor/autoload.php';
 require_once __DIR__ . '/../config/Database.php';
 require_once __DIR__ . '/../config/Messages.php';
+require_once __DIR__ . '/../config/Constants.php';
 require_once __DIR__ . '/../global/interceptor.php';
 
 // Load .env file
@@ -20,17 +25,23 @@ $dbConfig = [
 
 $database = new Database($dbConfig['host'], $dbConfig['database'], $dbConfig['username'], $dbConfig['password']);
 $database->connect();
+$conn = $database->getConnection();
 
 // Parse the request
-$request = $_SERVER['REQUEST_URI'];
+$request = strtok($_SERVER['REQUEST_URI'], '?');
 
 // Route the request
 switch ($request) {
-    case '/':
+    case Constants::API_ROUTES['BASE']:
         interceptEcho(Messages::SERVER_STATUS_SUCCESS);
         break;
-    
-    // Add more cases for other routes if needed
+
+        // Handle user routes    
+    case Constants::API_ROUTES['USER_LIST']:
+    case Constants::API_ROUTES['USER']:
+        require_once __DIR__ . '/../routes/user.php';
+        break;
+
     default:
         interceptEcho(Messages::ROUTE_NOT_FOUND, 404, null, Messages::ROUTE_NOT_FOUND);
         break;
