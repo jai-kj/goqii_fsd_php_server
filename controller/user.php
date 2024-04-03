@@ -33,4 +33,42 @@ class UserController
         else
             interceptEcho(Messages::USER_NOT_FOUND, 404, null, Messages::USER_NOT_FOUND);
     }
+
+    public function insertUser($reqBody)
+    {
+        if (!isset($reqBody['name']) || !isset($reqBody['email']) || !isset($reqBody['dob'])) {
+            interceptEcho(Messages::INCOMPLETE_USER_REQ_BODY, 400, null, Messages::INCOMPLETE_USER_REQ_BODY);
+            return;
+        }
+
+        $name = trim($reqBody['name']);
+        if (!preg_match('/^[a-zA-Z][a-zA-Z0-9 ]*$/', $name)) {
+            interceptEcho(Messages::INVALID_USER_NAME, 400, null, Messages::INVALID_USER_NAME);
+            return;
+        }
+
+        $email = trim($reqBody['email']);
+        if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+            interceptEcho(Messages::INVALID_USER_EMAIL, 400, null, Messages::INVALID_USER_EMAIL);
+            return;
+        }
+
+        $dob = date('Y-m-d', strtotime(trim($reqBody['dob'])));
+        $currentDate = date('Y-m-d');
+        if (!$dob || $dob > $currentDate) {
+            interceptEcho(Messages::INVALID_USER_DOB, 400, null, Messages::INVALID_USER_DOB);
+            return;
+        }
+
+        try {
+            $success = $this->userModel->insertUser($name, $email, $dob);
+            if ($success) {
+                interceptEcho(Messages::USER_INSERT_SUCCESS, 200);
+            } else {
+                interceptEcho(Messages::USER_INSERT_FAILURE, 500, null, Messages::USER_INSERT_FAILURE);
+            }
+        } catch (Exception $e) {
+            interceptEcho(Messages::USER_INSERT_FAILURE, 500, null, $e->getMessage());
+        }
+    }
 }

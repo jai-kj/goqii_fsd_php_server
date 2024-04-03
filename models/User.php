@@ -33,4 +33,20 @@ class User
     $user = $stmt->fetch(PDO::FETCH_ASSOC);
     return $user;
   }
+
+  // Insert new user
+  public function insertUser(string $name, string $email, string $dob)
+  {
+    $password = password_hash(bin2hex(random_bytes(8)), PASSWORD_DEFAULT);
+
+    $query = 'INSERT INTO ' . $this->table . ' (name, email, password, dob) 
+              VALUES (:name, :email, :password, :dob)';
+    $stmt = $this->conn->prepare($query);
+    $stmt->bindParam(':name', $name);
+    $stmt->bindParam(':email', $email);
+    $stmt->bindParam(':password', $password);
+    $stmt->bindParam(':dob', $dob);
+    $stmt->execute();
+    return $stmt->rowCount() > 0;
+  }
 }
