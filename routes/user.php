@@ -19,6 +19,8 @@ switch ($_SERVER['REQUEST_METHOD']) {
         break;
 
     case Constants::API_METHODS['PUT']:
+        $reqBody = json_decode(file_get_contents('php://input'), true);
+        $userController->updateUser($_GET['id'], $reqBody);
         break;
 
     case Constants::API_METHODS['DELETE']:

@@ -49,4 +49,41 @@ class User
     $stmt->execute();
     return $stmt->rowCount() > 0;
   }
+
+  // Update user details by ID
+  public function updateUser(string $id, array $userData)
+  {
+    $setClause = '';
+    $params = array(':id' => $id);
+
+    if (isset($userData['name'])) {
+      $setClause .= 'name = :name, ';
+      $params[':name'] = $userData['name'];
+    }
+
+    if (isset($userData['email'])) {
+      $setClause .= 'email = :email, ';
+      $params[':email'] = $userData['email'];
+    }
+
+    if (isset($userData['dob'])) {
+      $setClause .= 'dob = :dob, ';
+      $params[':dob'] = $userData['dob'];
+    }
+
+    // Remove trailing comma and space
+    $setClause = rtrim($setClause, ', ');
+
+    $query = 'UPDATE ' . $this->table . ' SET ' . $setClause . ' WHERE id = :id';
+    $stmt = $this->conn->prepare($query);
+
+    foreach (['id', 'name', 'email', 'dob'] as $paramName) {
+      if (isset($params[":$paramName"])) {
+        $stmt->bindParam(":$paramName", $params[":$paramName"]);
+      }
+    }
+
+    $stmt->execute();
+    return $stmt->rowCount() > 0;
+  }
 }
