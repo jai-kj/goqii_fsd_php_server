@@ -1,17 +1,5 @@
 <?php
 
-// Headers
-header('Access-Control-Allow-Origin: *');
-header('Access-Control-Allow-Methods: GET, POST, PUT, DELETE, OPTIONS');
-header('Access-Control-Allow-Headers: Content-Type, Authorization');
-header('Content-Type: application/json');
-
-// Handle preflight request
-if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
-    http_response_code(200);
-    exit();
-}
-
 require_once __DIR__ . '/../vendor/autoload.php';
 require_once __DIR__ . '/../config/Database.php';
 require_once __DIR__ . '/../config/Messages.php';
@@ -22,6 +10,20 @@ require_once __DIR__ . '/../global/interceptor.php';
 $dotenv = Dotenv\Dotenv::createImmutable(__DIR__ . '/..');
 $dotenv->load();
 
+// Set the appropriate CORS origin based on the environment variable
+$allowedOrigin = $_ENV['FRONTEND_URL'] ?? 'http://localhost:3000';
+
+// Headers
+header("Access-Control-Allow-Origin: $allowedOrigin");
+header('Access-Control-Allow-Methods: GET, POST, PUT, DELETE, OPTIONS');
+header('Access-Control-Allow-Headers: Content-Type, Authorization');
+header('Content-Type: application/json');
+
+// Handle preflight request
+if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
+    http_response_code(200);
+    exit();
+}
 
 // Create a new database connection
 $dbConfig = [
